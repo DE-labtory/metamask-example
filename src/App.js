@@ -1,26 +1,43 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import * as metamask from './metamask'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      accounts: [],
+      isMetamaskExists: false,
+    }
+  }
+
+  async componentDidMount() {
+    const isMetamaskExists = await metamask.exists();
+    const accounts = await metamask.getAccounts();
+    this.setState({
+      isMetamaskExists: isMetamaskExists,
+      accounts: accounts
+    });
+    console.log(accounts)
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div className="App">
+          <header className="App-header">
+            <h2>Is metamask available?</h2>
+            {this.state.isMetamaskExists ? "yes" : "no"}
+
+            <h3>Accounts</h3>
+            <ul>
+              {this.state.accounts.map((account, i) => {
+                return (account);
+              })}
+            </ul>
+          </header>
+        </div>
+      </React.Fragment>
+    )
+  }
 }
-
-export default App;

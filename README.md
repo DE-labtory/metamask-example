@@ -1,3 +1,49 @@
+## How to use a metamask in browser.
+
+메타마스크가 설치된 browser에서는 metamask가 자동으로 `window.ethereum`을 주입해주고 메타마스크와 관련된 모든 api는 `window.etheurem`을 통해 호출할수 있다.
+### how to detect metamask
+```
+if (typeof window.ethereum === 'undefined') {
+  alert('Looks like you need a Dapp browser to get started.')
+  alert('Consider installing MetaMask!')
+
+} else {
+  // can use a metamask
+}
+```
+### logging in
+`window.ethereum.enable()`를 통해 metamask의 accounts 정보를 가져 올 수 있다. 기본적으로 mainnet의 계정을 가져오고 
+`ethereum.selectedAddress` 값 설정을 통해 원하는 블록체인 네트워크의 계정을 가져올 수 있다.  
+```$xslt
+const accounts = await window.ethereum.enable()
+const account = accounts[0]
+```
+
+### Execute transaction
+`window.ethereum.sendAsync()`를 통해 transaction을 발생시킬 수 있다. `from`에 account 정보를 넣어준다.
+```$xslt
+const method = 'eth_sendTransaction'
+const parameters = [{
+    from: account,
+    to: yourAddress,
+    value: value,
+}]
+const from = account
+
+// Now putting it all together into an RPC request:
+const payload = {
+    method: method,
+    params: parameters,
+    from: from,
+}
+
+// Methods that require user authorization like this one will prompt a user interaction.
+// Other methods (like reading from the blockchain) may not.
+ethereum.sendAsync(payload, function (err, response){
+ ...
+}
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
